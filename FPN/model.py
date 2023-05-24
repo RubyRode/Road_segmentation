@@ -85,10 +85,10 @@ class RoadSegmentation(pl.LightningModule):
             self.eval()
             preds = self(x)
             preds = preds[:8]
-            grid = torchvision.utils.make_grid((preds.view(-1, 1, 320, 320)))
+            grid = torchvision.utils.make_grid((preds.view(-1, 1, 512, 512)))
             self.logger.experiment.add_image("Road_predictions", grid, self.global_step)
             y = y[:8]
-            grid = torchvision.utils.make_grid((y.view(-1, 1, 320, 320)))
+            grid = torchvision.utils.make_grid((y.view(-1, 1, 512, 512)))
             self.logger.experiment.add_image("Road_truth", grid, self.global_step)
             self.train()
         return dic

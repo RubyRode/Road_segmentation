@@ -2,18 +2,18 @@ import albumentations as album
 from albumentations.pytorch import ToTensorV2
 from dataset import get_loaders
 
-TRAIN_IMG_DIR = "input/tiff/train/"
-TRAIN_MASK_DIR = "input/tiff/train_labels/"
-VAL_IMG_DIR = "input/tiff/val/"
-VAL_MASK_DIR = "input/tiff/val_labels/"
-TEST_IMG_DIR = "input/tiff/test/"
-TEST_MASK_DIR = "input/tiff/test_labels"
+TRAIN_IMG_DIR = "../input/tiff/train/"
+TRAIN_MASK_DIR = "../input/tiff/train_labels/"
+VAL_IMG_DIR = "../input/tiff/val/"
+VAL_MASK_DIR = "../input/tiff/val_labels/"
+TEST_IMG_DIR = "../input/tiff/test/"
+TEST_MASK_DIR = "../input/tiff/test_labels"
 LEARNING_RATE = 1e-3
 BATCH_SIZE = 12
 NUM_WORKERS = 4
-IMAGE_HEIGHT, IMAGE_WIDTH = 320, 320
-EPOCHS = 80
-ARCH, ENCODER, IN_C, OUT_C = "FPN", "resnet34", 3, 1
+IMAGE_HEIGHT, IMAGE_WIDTH = 512, 512
+EPOCHS = 40
+ARCH, ENCODER, IN_C, OUT_C = "FPN", "resnext50_32x4d", 3, 1
 
 train_transforms = album.Compose(
     [

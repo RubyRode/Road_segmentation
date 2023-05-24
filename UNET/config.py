@@ -9,9 +9,9 @@ VAL_MASK_DIR = "../input/tiff/val_labels/"
 TEST_IMG_DIR = "../input/tiff/test/"
 TEST_MASK_DIR = "../input/tiff/test_labels"
 LEARNING_RATE = 1e-3
-BATCH_SIZE = 5
+BATCH_SIZE = 10
 NUM_WORKERS = 6
-IMAGE_HEIGHT, IMAGE_WIDTH = 320, 320
+IMAGE_HEIGHT, IMAGE_WIDTH = 512, 512
 EPOCHS = 80
 ARCH, ENCODER, IN_C, OUT_C = "UNET", "resnext50_32x4d", 3, 1
 

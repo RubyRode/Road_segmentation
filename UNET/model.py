@@ -50,17 +50,17 @@ class RoadSegmentation(pl.LightningModule):
 
         prob_mask = logits_mask.sigmoid()
         pred_mask = (prob_mask > 0.5).float()
-
+        self.log("loss", loss)
         tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="binary")
         if batch_idx is not None:
             x, y = batch
             x = self(x)
             if batch_idx % 15 == 0:
                 x = x[:8]
-                grid = torchvision.utils.make_grid((x.view(-1, 1, 320, 320)))
+                grid = torchvision.utils.make_grid((x.view(-1, 1, 512, 512)))
                 self.logger.experiment.add_image(f"{stage}_road_predictions", grid, self.global_step)
                 y = y[:8]
-                grid = torchvision.utils.make_grid((y.view(-1, 1, 320, 320)))
+                grid = torchvision.utils.make_grid((y.view(-1, 1, 512, 512)))
                 self.logger.experiment.add_image(f"{stage}_road_truth", grid, self.global_step)
 
         return {"loss": loss, "tp": tp, "fp": fp, "fn": fn, "tn": tn}
@@ -85,11 +85,11 @@ class RoadSegmentation(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         return self.shared_step(batch, "train", batch_idx)
 
-    def training_epoch_end(self, outputs):
+    def train_epoch_end(self, outputs):
         return self.shared_epoch_end(outputs, "train")
 
     def validation_step(self, batch, batch_idx):
-        return self.shared_step(batch, "train")
+        return self.shared_step(batch, "valid")
 
     def validation_epoch_end(self, outputs):
         return self.shared_epoch_end(outputs, "valid")
@@ -98,7 +98,7 @@ class RoadSegmentation(pl.LightningModule):
         return self.shared_step(batch, "test")
 
     def test_epoch_end(self, outputs):
-        return self.shared_epoch_end(outputs, "valid")
+        return self.shared_epoch_end(outputs, "test")
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=config.LEARNING_RATE)

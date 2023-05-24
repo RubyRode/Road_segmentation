@@ -25,28 +25,30 @@ if __name__ == "__main__":
                                           save_last=True,
                                           save_top_k=5,
                                           monitor="loss",
-                                          filename="FPN_{epoch:02d}_{train_per_image_iou:.2f}_{train_dataset_iou:.2f}")
+                                          filename="FPN_{epoch:02d}_{valid_dataset_iou:.2f}_{train_dataset_iou:.2f}")
     model = RoadSegmentation(arch=config.ARCH,
                              encoder_name=config.ENCODER,
                              in_channels=config.IN_C,
                              out_classes=config.OUT_C)
     trainer = pl.Trainer(
-        logger=logger,
+#         logger=logger,
         gpus=1,
         max_epochs=config.EPOCHS,
-        callbacks=[checkpoint_callback]
+#         callbacks=[checkpoint_callback]
     )
-    # trainer.fit(
-    #     model,
-    #     train_dataloaders=config.ds_ld["train_dl"],
-    #     val_dataloaders=config.ds_ld["val_dl"],
-    #     ckpt_path="../tb_logs/RoadSegmentation_v0/version_4/checkpoints/epoch=39-step=3719.ckpt",
-    # )
+#     trainer.fit(
+#         model,
+#         train_dataloaders=config.ds_ld["train_dl"],
+#         val_dataloaders=config.ds_ld["val_dl"],
+#     )
 
-    # valid_metrics = trainer.validate(model, dataloaders=config.ds_ld["val_dl"], verbose=False,
-    # ckpt_path="tb_logs/RoadSegmentation_FPN_v0/version_0/checkpoints/FPN_epoch=69_train_per_image_iou=0.55_train_dataset_iou=0.53.ckpt")
-    # pprint(valid_metrics)
-    path = r"C:\Users\dimas\PycharmProjects\Road_segemtation\tb_logs\RoadSegmentation_FPN_v0\version_0\checkpoints"
+#     valid_metrics = trainer.validate(model, dataloaders=config.ds_ld["val_dl"], verbose=False)
+#     pprint(valid_metrics)
+
+#     test_metrics = trainer.test(model, dataloaders=config.ds_ld["test_dl"], verbose=False)
+#     pprint(test_metrics)
+
+    path = "/usr/src/app/d.fedotov/Road_segmentation/FPN/tb_logs/RoadSegmentation_FPN_v0/version_0/checkpoints"
     for file in os.listdir(path):
         test_metrics = trainer.test(model, dataloaders=config.ds_ld["test_dl"], verbose=False, ckpt_path=path + "/" + file)
         pprint(test_metrics)
