@@ -1,3 +1,4 @@
+import os
 from pprint import pprint
 import torch
 from model import RoadSegmentation
@@ -35,17 +36,19 @@ if __name__ == "__main__":
         max_epochs=config.EPOCHS,
         callbacks=[checkpoint_callback]
     )
-    trainer.fit(
-        model,
-        train_dataloaders=config.ds_ld["train_dl"],
-        val_dataloaders=config.ds_ld["val_dl"],
-        # ckpt_path="../tb_logs/RoadSegmentation_v0/version_4/checkpoints/epoch=39-step=3719.ckpt",
-    )
+    # trainer.fit(
+    #     model,
+    #     train_dataloaders=config.ds_ld["train_dl"],
+    #     val_dataloaders=config.ds_ld["val_dl"],
+    #     ckpt_path="../tb_logs/RoadSegmentation_v0/version_4/checkpoints/epoch=39-step=3719.ckpt",
+    # )
 
-    valid_metrics = trainer.validate(model, dataloaders=config.ds_ld["val_dl"], verbose=False)
-    pprint(valid_metrics)
+    # valid_metrics = trainer.validate(model, dataloaders=config.ds_ld["val_dl"], verbose=False,
+    # ckpt_path="tb_logs/RoadSegmentation_FPN_v0/version_0/checkpoints/FPN_epoch=69_train_per_image_iou=0.55_train_dataset_iou=0.53.ckpt")
+    # pprint(valid_metrics)
+    path = r"C:\Users\dimas\PycharmProjects\Road_segemtation\tb_logs\RoadSegmentation_FPN_v0\version_0\checkpoints"
+    for file in os.listdir(path):
+        test_metrics = trainer.test(model, dataloaders=config.ds_ld["test_dl"], verbose=False, ckpt_path=path + "/" + file)
+        pprint(test_metrics)
 
-    test_metrics = trainer.test(model, dataloaders=config.ds_ld["test_dl"], verbose=False)
-    pprint(test_metrics)
-
-    pred_visualize(model, config.ds_ld["test_dl"])
+    # pred_visualize(model, config.ds_ld["test_dl"])

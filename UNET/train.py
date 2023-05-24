@@ -4,6 +4,7 @@ from model import RoadSegmentation
 import config
 from utils import pred_visualize
 from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.callbacks import ModelCheckpoint
 import pytorch_lightning as pl
 
 # print(f"Train size: {len(train_ds)}")
@@ -18,6 +19,12 @@ torch.set_float32_matmul_precision("medium")
 
 if __name__ == "__main__":
     logger = TensorBoardLogger("../tb_logs", name="RoadSegmentation_Unet_v0")
+    checkpoint_callback = ModelCheckpoint(dirpath="../tb_logs/RoadSegmentation_Unet_v0/version_0/checkpoints",
+                                          every_n_epochs=1,
+                                          save_last=True,
+                                          save_top_k=5,
+                                          monitor="valid_dataset_iou",
+                                          filename="Unet_{epoch:02d}_{valid_dataset_iou:.2f}_{train_dataset_iou:.2f}")
     model = RoadSegmentation(arch=config.ARCH,
                              encoder_name=config.ENCODER,
                              in_channels=config.IN_C,
@@ -27,6 +34,7 @@ if __name__ == "__main__":
         logger=logger,
         gpus=1,
         max_epochs=config.EPOCHS,
+        callbacks=[checkpoint_callback]
     )
     trainer.fit(
         model,

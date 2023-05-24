@@ -12,7 +12,7 @@ LEARNING_RATE = 1e-3
 BATCH_SIZE = 5
 NUM_WORKERS = 6
 IMAGE_HEIGHT, IMAGE_WIDTH = 320, 320
-EPOCHS = 40
+EPOCHS = 80
 ARCH, ENCODER, IN_C, OUT_C = "UNET", "resnext50_32x4d", 3, 1
 
 # noinspection DuplicatedCode
